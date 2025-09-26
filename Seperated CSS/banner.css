@@ -1,0 +1,21 @@
+/* ==========================================================================
+   PROFILE BANNER & AVATAR
+   ========================================================================== */
+.banner {
+  position: relative;
+  border-radius: 18px;
+}
+.banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url(var(--banner-url));
+  background-size: cover;
+  opacity: 0.95;
+}
+.banner-content > .avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 3px solid rgba(200,100,255,0.9);
+}
