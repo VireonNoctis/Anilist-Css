@@ -1,0 +1,913 @@
+/* ==========================================================================
+   VIREON — AniList Dark Purple Multi-Accent Theme 
+   --------------------------------------------------------------------------
+   Version: 3.1.0
+   Author: HTML + CSS + Javascript 
+   Target: https://anilist.co/user/Vireon/
+   Notes:
+     - Multi-accent: Anime (indigo/cyan), Manga (crimson/gold), Favorites (violet/pink)
+     - Dark / glassmorphism base, made for Fang Yuan & Shiki aesthetic
+     - Includes responsive rules, lots of comments for maintainability
+     - Placeholder image variables near top — replace with your URLs
+   --------------------------------------------------------------------------
+   Example conventional commit message for pushing to GitHub:
+     feat(theme): add full dark-purple AniList profile theme
+     - multi-accent sections (anime/manga/favorites)
+     - banner/avatar, nav redesign, stats pages, activity feed polish
+     - imported google fonts, animations, responsive adjustments
+   ========================================================================== */
+
+/* ==========================================================================
+   CONFIG / ASSET PLACEHOLDERS
+   --------------------------------------------------------------------------
+   Replace these placeholder URLs with your chosen images:
+     --banner-url: large banner background (cover)
+     --avatar-url: main avatar image (used only if overriding AniList avatar)
+     --search-gif: small gif applied to search hover (optional)
+   ========================================================================== */
+:root {
+  /* ---------- colors ---------- */
+  --bg-deep-1: #060008;
+  --bg-deep-2: #1a0026;
+  --glass-weak: rgba(18,6,30,0.56);
+  --glass-strong: rgba(10,2,20,0.82);
+  --muted: #cfc4e9;
+  --muted-2: #a99bd6;
+  --text: #efe8ff;
+  --accent-anime-start: #2fb3ff; /* cyan */
+  --accent-anime-end: #7a00ff;   /* indigo */
+  --accent-manga-start: #ff416c; /* crimson */
+  --accent-manga-end: #ffaf32;   /* gold */
+  --accent-fav-start: #b06cff;   /* violet */
+  --accent-fav-end: #ff77d3;     /* pink */
+  --card-border: rgba(140,80,200,0.16);
+  --soft-shadow: 0 12px 45px rgba(0,0,0,0.6);
+  --glass-border-strong: rgba(255,255,255,0.03);
+  --glass-border-weak: rgba(255,255,255,0.01);
+
+  /* ---------- layout ---------- */
+  --max-width: 1280px;
+
+  /* ---------- images (placeholders) ---------- */
+  --banner-url: "https://files.catbox.moe/26tuuc.jpg";
+  --avatar-url: "https://files.catbox.moe/8lodjn.png";
+  --search-gif: "https://i.stack.imgur.com/2c5J8.gif";
+}
+
+/* ==========================================================================
+   FONT IMPORTS
+   --------------------------------------------------------------------------
+   Loaded fonts:
+     - Playfair Display (display / headings)
+     - Quicksand (body)
+     - Orbitron (UI accents)
+     - Rubik (small UI / chips)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@300;400;600&family=Orbitron:wght@400;700&family=Rubik:wght@400;700&display=swap');
+
+/* ==========================================================================
+   BASE LAYOUT & TONE
+   --------------------------------------------------------------------------
+   Global background, base typography and texture.
+   Make small, easy-to-tune variables at top for quick theme edits.
+   ========================================================================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(1200px 600px at 12% 10%, rgba(120,30,200,0.06), transparent),
+    linear-gradient(180deg, var(--bg-deep-1), var(--bg-deep-2)) fixed;
+  color: var(--text);
+  font-family: 'Quicksand', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* subtle grain overlay for tactile depth */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6'><rect width='6' height='6' fill='none'/><circle cx='3' cy='3' r='0.6' fill='%23000000' opacity='0.02'/></svg>");
+  opacity: 0.9;
+  mix-blend-mode: overlay;
+}
+
+/* global anchor defaults */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color .22s ease, transform .22s ease;
+}
+
+/* ==========================================================================
+   SCROLLBARS
+   ========================================================================== */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 8px; }
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(91,0,255,0.9), rgba(255,0,150,0.9));
+  border-radius: 8px;
+  border: 2px solid rgba(0,0,0,0.25);
+}
+
+/* ==========================================================================
+   GLOBAL CARD / GLASS COMPONENT
+   --------------------------------------------------------------------------
+   All major panels use subtle glass effect with blur and border.
+   ========================================================================== */
+.card, .content.container, .stats-wrap, .favourites-wrap, .about .content-wrap, .activity-entry .wrap {
+  background: var(--glass-weak);
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--soft-shadow);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .22s ease;
+}
+
+/* card hover lift */
+.card:hover, .content.container:hover, .activity-entry .wrap:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 60px rgba(70,10,100,0.18);
+}
+
+/* ==========================================================================
+   NAVBAR
+   --------------------------------------------------------------------------
+   Re-style AniList main nav to fit the theme.
+   ========================================================================== */
+.nav-wrap {
+  background: linear-gradient(180deg, rgba(8,3,25,0.7), rgba(6,1,20,0.6)) !important;
+  border-radius: 40px !important;
+  padding: 10px 18px;
+  box-shadow: 0 10px 28px rgba(20,6,50,0.5);
+  border: 1px solid rgba(180,100,255,0.06);
+  max-width: var(--max-width);
+  margin: 12px auto;
+}
+
+/* nav links */
+.nav .wrap .link, .nav .link[data-v-4fbac4e1], .header-wrap .nav-wrap .nav .link {
+  color: var(--muted) !important;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  font-size: 1rem;
+  padding: 6px 10px;
+  transition: color .18s ease, transform .18s ease, text-shadow .18s ease;
+}
+.nav .wrap .link:hover, .nav .wrap .link:focus {
+  color: #fff !important;
+  transform: translateY(-2px);
+  text-shadow: 0 6px 18px rgba(122,0,255,0.12);
+}
+
+/* logo swap and hover */
+.logo img[data-v-4fbac4e1] {
+  content: url("https://files.catbox.moe/auaith.png");
+  transition: transform .28s ease;
+  filter: drop-shadow(0 12px 36px rgba(120,40,200,0.18));
+}
+.logo:hover img { transform: scale(1.2) rotate(-8deg); }
+
+/* search field styling */
+.nav .wrap .search {
+  background: rgba(255,255,255,0.02);
+  border-radius: 26px;
+  padding: 8px 14px;
+  width: 100%;
+  max-width: 420px;
+  font-family: 'Quicksand', sans-serif;
+  color: var(--muted);
+  box-shadow: inset 0 -2px 8px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+.nav .wrap .search:after {
+  content: "Search";
+  color: rgba(255,255,255,0.18);
+  font-size: 0.95rem;
+}
+
+/* vertical nav variant (if enabled) */
+#nav.nav {
+  width: 68px;
+  height: 82vh;
+  position: fixed !important;
+  top: 9vh;
+  left: 12px;
+  transform: translateX(0);
+  border-radius: 14px;
+  padding: 8px;
+}
+
+/* ==========================================================================
+   BANNER / HEADER
+   --------------------------------------------------------------------------
+   Uses the user's chosen banner (placeholder var at root) and glowy avatar.
+   ========================================================================== */
+.banner {
+  padding: 44px 28px;
+  margin: 18px auto;
+  max-width: var(--max-width);
+  background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(6,0,20,0.25)) !important;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.02);
+  position: relative;
+  overflow: hidden;
+}
+
+/* banner background image treatment — optional overlay to improve contrast */
+.banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url(var(--banner-url));
+  background-position: center center;
+  background-size: cover;
+  filter: brightness(0.45) contrast(1.06) saturate(1.0);
+  opacity: 0.96;
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+
+/* banner gradient overlay for purple tone */
+.banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(120,20,200,0.16), rgba(0,0,0,0.28));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* banner content — place above overlay */
+.banner-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 12px 8px;
+}
+
+/* avatar */
+.banner-content > .avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(180deg, rgba(20,0,40,0.6), rgba(30,0,60,0.6));
+  border: 3px solid rgba(200,100,255,0.9);
+  box-shadow: 0 12px 44px rgba(120,40,200,0.24);
+  transition: transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.banner-content > .avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+  display:block;
+}
+.banner-content > .avatar:hover {
+  transform: rotate(-6deg) scale(1.12);
+  box-shadow: 0 30px 80px rgba(200,60,255,0.28);
+}
+
+/* name block */
+.banner-content .name {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.0rem;
+  color: var(--text);
+  letter-spacing: 0.3px;
+  line-height: 1;
+  text-shadow: 0 10px 40px rgba(100,20,200,0.16);
+  display:flex;
+  flex-direction:column;
+}
+.banner-content .name .handle {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* small follower badge & actions alignment */
+.banner-content > .follower-badge,
+.banner-content > .actions {
+  transition: transform .45s cubic-bezier(.2,.9,.3,1), opacity .3s;
+}
+.banner-content .follower-badge {
+  margin-left: auto;
+  margin-right: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.banner-content .actions {
+  display:flex; gap:8px; align-items:center; margin-right:6px;
+}
+
+/* banner hover interactions — subtle */
+.banner-content:hover > .name { transform: translateX(4px) }
+.banner-content:hover > .avatar { transform: scale(1.07) rotate(-2deg) }
+
+/* ==========================================================================
+   GLOBAL TYPOGRAPHY / UI ELEMENTS
+   -------------------------------------------------------------------------- */
+h1, h2, h3, .section-header {
+  font-family: 'Playfair Display', serif;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+.section-header { font-size: 1.75rem; color: var(--muted-2) }
+
+/* small UI */
+.chip {
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background: rgba(255,255,255,0.02);
+  color: var(--muted);
+  font-size: 0.85rem;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* buttons */
+button, .nav-btn, .actions .nav-btn, .load-more {
+  background: linear-gradient(90deg, rgba(120,30,220,0.95), rgba(255,0,150,0.95));
+  color: #fff !important;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 40px rgba(140,40,200,0.16);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+button:hover, .nav-btn:hover, .load-more:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 60px rgba(170,30,200,0.2);
+}
+
+/* input, textarea */
+.input input, .input .el-input__inner, .el-textarea__inner, input[type="text"], textarea {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.02);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.input input:focus, .el-textarea__inner:focus, input[type="text"]:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(170,40,200,0.5);
+  box-shadow: 0 8px 24px rgba(120,40,200,0.12);
+}
+
+/* lists and titles */
+.list .title, .list .meta {
+  font-weight: 600;
+  color: var(--text);
+}
+.list .meta { color: var(--muted) }
+
+/* avatars inside lists */
+.header > .avatar, .users .user .avatar {
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.04);
+  opacity: 0.95;
+  transition: transform .22s ease, box-shadow .22s;
+}
+
+/* ==========================================================================
+   ANIME / MANGA / FAVORITES: multi-accent split
+   --------------------------------------------------------------------------
+   Each major section receives its own accent palette and micro-interactions.
+   ========================================================================== */
+
+/* ---------------------------
+   ANIME — INDIGO / CYAN
+   --------------------------- */
+.page-content[data-route*='animelist'],
+.page-content[data-route*='stats/anime'] {
+  --accent-start: var(--accent-anime-start);
+  --accent-end: var(--accent-anime-end);
+}
+/* anime header & chips */
+.page-content[data-route*='animelist'] .section-header,
+.page-content[data-route*='stats/anime'] .section-header {
+  color: #cfeeff;
+  text-shadow: 0 4px 18px rgba(47,179,255,0.06);
+}
+/* anime list cover hover */
+.page-content[data-route*='animelist'] .list .cover {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform .28s, box-shadow .28s;
+}
+.page-content[data-route*='animelist'] .list .cover:hover {
+  transform: translateY(-6px) scale(1.06);
+  box-shadow: 0 20px 60px rgba(30,140,255,0.08);
+}
+
+/* anime stat bars */
+.page-content[data-route*='stats/anime/genres'] .chart .bar,
+.page-content[data-route*='stats/anime/overview'] .bar {
+  background: linear-gradient(90deg, var(--accent-anime-start), var(--accent-anime-end)) !important;
+  height: 10px;
+  border-radius: 999px;
+  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.5);
+}
+
+/* anime tag chips */
+.page-content[data-route*='stats/anime/tags'] .tag {
+  background: linear-gradient(135deg, var(--accent-anime-end), var(--accent-anime-start));
+  color: #0b1020;
+  padding: 6px 10px;
+  border-radius: 10px;
+  margin: 6px 6px 6px 0;
+  display:inline-block;
+  font-weight:700;
+  text-transform:capitalize;
+}
+
+/* voice actors / staff cards */
+.page-content[data-route*='stats/anime/voiceActors'] .person,
+.page-content[data-route*='stats/anime/staff'] .person {
+  border: 1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(20,6,40,0.16), rgba(12,3,28,0.12));
+  padding: 10px;
+  border-radius: 10px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+/* studios list micro */
+.page-content[data-route*='stats/anime/studios'] .studio {
+  display:inline-flex;
+  gap:8px;
+  padding:8px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+}
+
+/* ---------------------------
+   MANGA — CRIMSON / GOLD
+   --------------------------- */
+.page-content[data-route*='mangalist'],
+.page-content[data-route*='stats/manga'] {
+  --accent-start: var(--accent-manga-start);
+  --accent-end: var(--accent-manga-end);
+}
+/* manga headers & chips */
+.page-content[data-route*='mangalist'] .section-header,
+.page-content[data-route*='stats/manga'] .section-header {
+  color: #ffd8c9;
+  text-shadow: 0 4px 18px rgba(255,65,108,0.06);
+}
+/* manga covers hover */
+.page-content[data-route*='mangalist'] .list .cover:hover {
+  transform: translateY(-5px) scale(1.04);
+  box-shadow: 0 16px 46px rgba(255,80,60,0.07);
+}
+/* manga bars */
+.page-content[data-route*='stats/manga/genres'] .chart .bar,
+.page-content[data-route*='stats/manga/overview'] .bar {
+  background: linear-gradient(90deg, var(--accent-manga-start), var(--accent-manga-end)) !important;
+  height: 10px;
+  border-radius: 999px;
+}
+
+/* manga tags */
+.page-content[data-route*='stats/manga/tags'] .tag {
+  background: linear-gradient(90deg, var(--accent-manga-end), var(--accent-manga-start));
+  color: #15060a;
+  padding: 6px 10px;
+  border-radius: 10px;
+  margin: 6px;
+  font-weight:700;
+}
+
+/* ---------------------------
+   FAVORITES — VIOLET / PINK
+   --------------------------- */
+.page-content[data-route*='favorites'] {
+  --accent-start: var(--accent-fav-start);
+  --accent-end: var(--accent-fav-end);
+}
+.page-content[data-route*='favorites'] .section-header {
+  color: #ffd6f8;
+  text-shadow: 0 4px 18px rgba(176,108,255,0.06);
+}
+.favourites .favourite {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform .24s, box-shadow .24s;
+}
+.favourites .favourite:hover {
+  transform: scale(1.08);
+  box-shadow: 0 18px 50px rgba(176,108,255,0.12);
+}
+
+/* tag cloud for favourites */
+.page-content[data-route*='favorites'] .tag {
+  display:inline-block;
+  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  margin: 6px 6px 6px 0;
+  font-weight:700;
+}
+
+/* ==========================================================================
+   STATS PAGES — specific tweaks
+   --------------------------------------------------------------------------
+   Various stats pages (overview, genres, tags, voice actors, staff)
+   We apply micro styling for each kind of stat.
+   ========================================================================== */
+
+/* generic stats container */
+.stats-wrap {
+  display:block;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* chart wrapping */
+.chart-wrap, .chart {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* list style for numeric stats */
+.stats-wrap .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 12px;
+}
+
+/* small numeric badge */
+.stat .value {
+  font-weight: 700;
+  color: var(--muted-2);
+  font-size: 1.05rem;
+}
+
+/* tiny captions */
+.stat .label {
+  color: var(--muted);
+  font-size: 0.90rem;
+}
+
+/* ==========================================================================
+   PROGRESS BARS / LIST STATS
+   --------------------------------------------------------------------------
+   Make the user's progress bars dramatic and colorful per section.
+   ========================================================================== */
+.bar {
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.45);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+.bar > i {
+  display:block;
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg,#3f2066,#8a2be2);
+  border-radius:999px;
+  transition: width .6s ease;
+}
+
+/* when inside anime stats, override */
+.page-content[data-route*='stats/anime'] .bar > i {
+  background: linear-gradient(90deg, var(--accent-anime-start), var(--accent-anime-end));
+}
+.page-content[data-route*='stats/manga'] .bar > i {
+  background: linear-gradient(90deg, var(--accent-manga-start), var(--accent-manga-end));
+}
+.page-content[data-route*='favorites'] .bar > i {
+  background: linear-gradient(90deg, var(--accent-fav-start), var(--accent-fav-end));
+}
+
+/* list-stats boxes */
+.list-stats {
+  border-radius: 12px !important;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.02);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+}
+
+/* ==========================================================================
+   ACTIVITY FEED & REPLIES
+   --------------------------------------------------------------------------
+   Improved spacing, hover lifts, liked-heart imagery, animation staggering.
+   ========================================================================== */
+.activity-feed .activity-entry .wrap {
+  display:flex;
+  gap: 12px;
+  align-items:flex-start;
+  padding: 12px;
+  border-radius: 12px;
+  transition: transform .24s ease, box-shadow .24s ease;
+  overflow: visible;
+}
+.activity-feed .activity-entry .wrap:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 60px rgba(20,6,50,0.16);
+}
+
+/* small avatars in feed */
+.activity-feed .activity-entry .wrap .header .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(0,0,0,0.25);
+  overflow:hidden;
+}
+
+/* liked heart: custom image background fallback */
+.action.likes .button .fa-heart {
+  background-image: url("https://i.imgur.com/gjk8mg3.png");
+  background-size: 100% 100%;
+  width: 32px;
+  height: 32px;
+  display:inline-block;
+  border-radius: 6px;
+}
+.action.likes .button.liked .fa-heart {
+  background-image: url("https://i.imgur.com/WAyA8wj.png");
+}
+
+/* quick animation: fadeIn for replies (stagger) */
+@keyframes fadeInStagger {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.activity-feed .activity-entry,
+.activity-feed .activity-replies .reply {
+  animation: fadeInStagger 0.45s ease both;
+}
+
+/* stagger delays for first 10 replies */
+.activity-feed .activity-replies .reply:nth-child(1) { animation-delay: 0.05s; }
+.activity-feed .activity-replies .reply:nth-child(2) { animation-delay: 0.12s; }
+.activity-feed .activity-replies .reply:nth-child(3) { animation-delay: 0.18s; }
+.activity-feed .activity-replies .reply:nth-child(4) { animation-delay: 0.24s; }
+.activity-feed .activity-replies .reply:nth-child(5) { animation-delay: 0.30s; }
+.activity-feed .activity-replies .reply:nth-child(6) { animation-delay: 0.36s; }
+.activity-feed .activity-replies .reply:nth-child(7) { animation-delay: 0.42s; }
+.activity-feed .activity-replies .reply:nth-child(8) { animation-delay: 0.48s; }
+.activity-feed .activity-replies .reply:nth-child(9) { animation-delay: 0.54s; }
+.activity-feed .activity-replies .reply:nth-child(10) { animation-delay: 0.60s; }
+
+/* hide unwanted time extras (clean look) */
+.activity-entry > .wrap > .time > .extras-dropdown, .activity-entry > .wrap > .time > .action { display: none; }
+
+/* message / text preview heights */
+.activity-message > .wrap, .activity-text > .wrap { height: auto; max-height: none; }
+
+/* ==========================================================================
+   FAVORITES / FAVOURITE CARD DETAILS
+   --------------------------------------------------------------------------
+   Make favourite covers pop and support hover enlarge.
+   ========================================================================== */
+.favourites .favourite {
+  transition: transform .28s ease, box-shadow .28s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.02);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+}
+.favourites .favourite:hover {
+  transform: translateY(-8px) scale(1.04);
+  z-index: 40;
+  box-shadow: 0 30px 90px rgba(120,40,200,0.12);
+}
+
+/* cover image style in favourites */
+.favourite .cover {
+  border-radius: 8px;
+  overflow: hidden;
+  object-fit: cover;
+  transition: transform .28s ease;
+}
+.favourite .cover:hover { transform: scale(1.06) }
+
+/* small meta under favourites */
+.favourite .meta { color: var(--muted); font-size: 0.9rem; }
+
+/* ==========================================================================
+   SPOILER BLOCKS (polite + stylish)
+   --------------------------------------------------------------------------
+   Clear label and nice hover reveal prompts.
+   ========================================================================== */
+.markdown .markdown-spoiler:not(.spoiler-visible) {
+  display:inline-block;
+  padding:8px 12px;
+  border-radius:10px;
+  background: linear-gradient(180deg, rgba(5,3,8,0.7), rgba(12,4,16,0.7));
+  border: 1px dashed rgba(255,255,255,0.03);
+  color: transparent;
+  text-align:center;
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease;
+}
+.markdown .markdown-spoiler:before {
+  content: "Spoiler - click to reveal 🗝️";
+  color: rgba(220,220,240,0.6);
+  font-size: 0.95rem;
+  display:block;
+}
+.markdown .markdown-spoiler:hover { transform: translateY(-3px); background: linear-gradient(180deg, rgba(30,6,50,0.7), rgba(20,6,40,0.75)) }
+
+/* ==========================================================================
+   LIST ITEM CARD & COVER TREATMENTS
+   --------------------------------------------------------------------------
+   Re-style anime/manga entries to float with rounded covers.
+   ========================================================================== */
+.list .entry-dropdown, .list .small, .list .cover {
+  border-radius: 12px;
+  transition: transform .24s, box-shadow .24s;
+  overflow: hidden;
+}
+.list .cover {
+  border: 1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+}
+
+/* list item hover */
+.list .title, .list .meta {
+  transition: opacity .18s ease, transform .18s ease;
+}
+.list .small:hover .cover, .list .entry:hover .cover {
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 18px 60px rgba(80,20,160,0.06);
+}
+
+/* small responsive cover aspect */
+.list .small > a { aspect-ratio: 4/5; }
+
+/* ==========================================================================
+   INPUTS, EDITORS, AND LOAD MORE
+   -------------------------------------------------------------------------- */
+.user-page-unscoped .markdown-editor, .el-textarea__inner, .input {
+  border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+.load-more {
+  display:block;
+  margin: 18px auto;
+  padding: 10px 20px;
+  border-radius: 30px !important;
+  font-family: 'Rubik', sans-serif;
+  font-size: 1rem !important;
+  max-width: 360px !important;
+  background: linear-gradient(90deg, rgba(120,30,220,0.95), rgba(255,0,150,0.95));
+  color: #fff !important;
+  border: none !important;
+}
+
+/* ==========================================================================
+   SMALL DEVICE / RESPONSIVE RULES
+   --------------------------------------------------------------------------
+   Ensure layout scales down gracefully.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .banner-content { flex-direction: row; gap: 12px; align-items:center; }
+  .banner-content .name { font-size: 2rem; }
+  .banner-content > .avatar { width: 96px; height:96px; }
+  .nav-wrap { max-width: calc(100% - 28px); margin: 10px 14px; }
+  #app { padding-left: 18px; }
+  #nav.nav { display: none; }
+}
+@media (max-width: 760px) {
+  .banner { padding: 18px 14px; border-radius: 10px; }
+  .banner-content { gap: 10px; align-items:center; }
+  .banner-content .name { font-size: 1.5rem; }
+  .content.container { padding: 10px; border-radius: 10px; }
+  .section-header { font-size: 1.2rem; }
+  .nav .wrap .search { display: none; } /* keep UI minimal */
+}
+
+/* ==========================================================================
+   EXTRA VISUAL LAYERS / DECORATIVE ELEMENTS
+   --------------------------------------------------------------------------
+   Adds subtle animated accents for headers and username.
+   ========================================================================== */
+@keyframes softPulse {
+  0% { transform: scale(1); filter: drop-shadow(0 4px 18px rgba(120,40,200,0.06)); }
+  50% { transform: scale(1.01); filter: drop-shadow(0 16px 48px rgba(200,60,255,0.12)); }
+  100% { transform: scale(1); filter: drop-shadow(0 4px 18px rgba(120,40,200,0.06)); }
+}
+.banner-content .name { animation: softPulse 6s ease-in-out infinite; }
+
+/* subtle floating glow behind the username (decorative) */
+.banner-content .name::after {
+  content: "";
+  display:block;
+  width: 420px; height: 90px;
+  position: absolute;
+  left: 180px; top: 14px;
+  background: radial-gradient(200px 80px at 30% 20%, rgba(120,20,200,0.12), transparent 40%);
+  filter: blur(28px);
+  z-index: 0;
+  pointer-events:none;
+}
+
+/* ==========================================================================
+   CLEANUP / HIDE / UTILITY
+   --------------------------------------------------------------------------
+   Hide extension artifacts and some unwanted components, tidy UI pieces.
+   ========================================================================== */
+/* hide hoh download, extension UI, plugin leftovers */
+.hohDownload,
+.mackBtn, #myContainer, #myContainer1, #myContainer2,
+.mackSearch, .mackList, .some-extension-badge { display:none !important; }
+
+/* reduce visual noise on small icons / chevrons */
+.user .avatar + .chevron { opacity: 0 !important; }
+
+/* thin rules for markdown hr */
+.markdown hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  margin: 10px 0;
+}
+
+/* helper classes */
+.vr { border-left: 1px solid rgba(255,255,255,0.03); padding-left: 12px; }
+.h-center { display:flex; align-items:center; justify-content:center }
+
+/* ==========================================================================
+   BANNER / AVATAR OVERRIDES (OPTIONAL)
+   --------------------------------------------------------------------------
+   If you want to pin a banner or avatar from within CSS (overrides AniList),
+   replace root variables and uncomment next blocks. Note: AniList sometimes
+   restricts direct override of profile avatar — using CSS background works
+   best for banner visuals (safe to rely on).
+   ========================================================================== */
+/* Banner image override (uncomment if you want CSS-only banner override)
+.banner::before {
+  background-image: url('https://files.catbox.moe/26tuuc.jpg'); 
+  background-position: center;
+  background-size: cover;
+} */
+
+/* Avatar CSS-only badge (not recommended if AniList supplies img)
+.banner-content > .avatar { background-image: url(var(--avatar-url)); background-size:cover; background-position:center; } */
+
+/* ==========================================================================
+   TWEAKED SELECTORS FROM ORIGINAL THEME (compat)
+   --------------------------------------------------------------------------
+   Keep a set of useful overrides that map to AniList internals to ensure
+   styling applies on the site despite unique scoped attributes in the DOM.
+   ========================================================================== */
+
+/* example: handle .link[data-v-...] family for nav icons & scale */
+.link[data-v-4fbac4e1],
+.link[data-v-1cc2919e],
+.link[data-v-5445dac8] {
+  transition: transform .22s ease, color .18s ease, text-shadow .18s ease;
+  will-change: transform, color;
+}
+.link[data-v-4fbac4e1]:hover,
+.link[data-v-1cc2919e]:hover,
+.link[data-v-5445dac8]:hover {
+  transform: scale(1.12);
+  color: #fff !important;
+  text-shadow: 0 8px 26px rgba(122,0,255,0.12);
+}
+
+/* small header link styling */
+.header-wrap .nav-wrap .nav .link { margin: 0 16px; font-size: 1rem; }
+
+/* make sure activity-time labels are subtle */
+.activity-entry .wrap > .time { opacity: 0.9; color: var(--muted); font-size: .95rem; }
+
+/* ensure reply avatars circular look */
+.avatar[data-v-1bf2cf4e], .avatar[data-v-732ef224] {
+  border-radius: 10px !important;
+  transition: transform .22s ease, opacity .22s;
+}
+
+
+/* END OF FILE */
