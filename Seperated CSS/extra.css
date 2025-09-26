@@ -1,0 +1,8 @@
+/* ==========================================================================
+   SPOILERS, CLEANUP, UTILITIES
+   ========================================================================== */
+.markdown .markdown-spoiler:not(.spoiler-visible) {
+  background: rgba(5,3,8,0.7);
+  border: 1px dashed rgba(255,255,255,0.03);
+}
+.hohDownload, .mackBtn { display: none !important; }
