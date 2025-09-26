@@ -1,34 +1,107 @@
 /* ==========================================================================
-   BASE LAYOUT & TONE
+   BASE THEME FOUNDATION
+   ==========================================================================
+   Handles:
+   - CSS variables (theme colors, shadows, radii)
+   - Font imports
+   - Global resets
+   - Scrollbar design
+   - Body background & structure
    ========================================================================== */
+
+/* ---------- Root Variables ---------- */
 :root {
+  /* Primary Backgrounds */
   --bg-deep-1: #060008;
   --bg-deep-2: #1a0026;
-  --glass-weak: rgba(18,6,30,0.56);
-  --glass-strong: rgba(10,2,20,0.82);
+  --bg-gradient: linear-gradient(180deg, var(--bg-deep-1), var(--bg-deep-2));
+
+  /* Text Colors */
+  --text: #efe8ff;
   --muted: #cfc4e9;
   --muted-2: #a99bd6;
-  --text: #efe8ff;
 
+  /* Shadows & Effects */
+  --soft-shadow: 0 12px 45px rgba(0,0,0,0.6);
+  --inner-glow: inset 0 0 12px rgba(180,120,255,0.15);
+
+  /* Card Styling */
+  --card-radius: 16px;
+  --card-border: rgba(140,80,200,0.16);
+  --glass-weak: rgba(18,6,30,0.56);
+  --glass-strong: rgba(10,2,20,0.82);
+
+  /* Accents */
   --accent-anime-start: #2fb3ff;
   --accent-anime-end: #7a00ff;
+
   --accent-manga-start: #ff416c;
   --accent-manga-end: #ffaf32;
+
   --accent-fav-start: #b06cff;
   --accent-fav-end: #ff77d3;
 
-  --card-border: rgba(140,80,200,0.16);
-  --soft-shadow: 0 12px 45px rgba(0,0,0,0.6);
-
+  /* Banner & Avatar Defaults */
   --banner-url: "https://files.catbox.moe/26tuuc.jpg";
   --avatar-url: "https://files.catbox.moe/8lodjn.png";
 }
 
-/* fonts */
+/* ---------- Fonts ---------- */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@300;400;600&family=Orbitron:wght@400;700&family=Rubik:wght@400;700&display=swap');
 
+/* ---------- Global Resets ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ---------- Body ---------- */
 html, body {
-  background: linear-gradient(180deg, var(--bg-deep-1), var(--bg-deep-2)) fixed;
+  background: var(--bg-gradient) fixed;
   color: var(--text);
   font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  min-height: 100%;
+}
+
+/* ---------- Scrollbar ---------- */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--accent-anime-start), var(--accent-anime-end));
+  border-radius: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+}
+
+/* ---------- Selection Highlight ---------- */
+::selection {
+  background: rgba(160, 100, 255, 0.5);
+  color: #fff;
+}
+
+/* ---------- Utility Classes ---------- */
+.text-glow {
+  text-shadow: 0 0 10px rgba(180,120,255,0.9), 0 0 20px rgba(255,0,120,0.6);
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rounded {
+  border-radius: var(--card-radius);
+}
+.shadow {
+  box-shadow: var(--soft-shadow);
+}
+
+/* ---------- Transitions ---------- */
+a, button, .link {
+  transition: all 0.24s ease;
 }
