@@ -1,0 +1,9 @@
+/* ==========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .banner-content .name { font-size: 2rem; }
+}
+@media (max-width: 760px) {
+  .banner { padding: 18px 14px; }
+}
