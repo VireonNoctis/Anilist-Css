@@ -1,0 +1,15 @@
+/* ==========================================================================
+   FAVORITES
+   ========================================================================== */
+.page-content[data-route*='favorites'] {
+  --accent-start: var(--accent-fav-start);
+  --accent-end: var(--accent-fav-end);
+}
+.favourites .favourite {
+  border-radius: 12px;
+  transition: transform .24s, box-shadow .24s;
+}
+.favourites .favourite:hover {
+  transform: scale(1.08);
+  box-shadow: 0 18px 50px rgba(176,108,255,0.12);
+}
