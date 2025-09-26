@@ -1,0 +1,11 @@
+/* ==========================================================================
+   MANGA LIST & STATS
+   ========================================================================== */
+.page-content[data-route*='mangalist'] {
+  --accent-start: var(--accent-manga-start);
+  --accent-end: var(--accent-manga-end);
+}
+.page-content[data-route*='mangalist'] .cover:hover {
+  transform: scale(1.04);
+  box-shadow: 0 16px 46px rgba(255,80,60,0.07);
+}
