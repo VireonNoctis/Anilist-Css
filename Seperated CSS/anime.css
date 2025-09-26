@@ -1,0 +1,11 @@
+/* ==========================================================================
+   ANIME LIST & STATS
+   ========================================================================== */
+.page-content[data-route*='animelist'] {
+  --accent-start: var(--accent-anime-start);
+  --accent-end: var(--accent-anime-end);
+}
+.page-content[data-route*='animelist'] .cover:hover {
+  transform: scale(1.06);
+  box-shadow: 0 20px 60px rgba(30,140,255,0.08);
+}
