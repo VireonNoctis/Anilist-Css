@@ -1,0 +1,11 @@
+/* ==========================================================================
+   ACTIVITY FEED
+   ========================================================================== */
+.activity-feed .activity-entry .wrap {
+  padding: 12px;
+  border-radius: 12px;
+  transition: transform .24s ease;
+}
+.activity-feed .activity-entry .wrap:hover {
+  transform: translateY(-8px);
+}
