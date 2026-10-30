@@ -1,5 +1,13 @@
 # 🌙 VIREON — AniList Dark Purple Multi-Accent Theme
 
+<!-- REPOSITORY-HEALTH:START -->
+[![Code quality](https://github.com/VireonNoctis/Anilist-Css/actions/workflows/repository-health.yml/badge.svg?branch=main)](https://github.com/VireonNoctis/Anilist-Css/actions/workflows/repository-health.yml)
+[![Top language](https://img.shields.io/github/languages/top/VireonNoctis/Anilist-Css?style=flat-square)](https://github.com/VireonNoctis/Anilist-Css)
+[![Languages](https://img.shields.io/github/languages/count/VireonNoctis/Anilist-Css?style=flat-square)](https://github.com/VireonNoctis/Anilist-Css)
+[![Automated tech stack](https://img.shields.io/badge/tech_stack-auto--detected-64748b?style=flat-square)](TECH_STACK.md)
+<!-- REPOSITORY-HEALTH:END -->
+
+
 A premium dark purple AniList CSS theme inspired by **Fang Yuan**, **Shiki**, mystery novels, and modern glassmorphism.
 
 Designed specifically for the **Vireon** profile, but fully customizable for anyone who wants a clean, elegant, and highly animated AniList experience.
